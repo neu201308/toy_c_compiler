@@ -1,7 +1,7 @@
 #include"header.h"
 #include"lexical.h"
-
 extern int automation_table[][129];
+
 string KT[] = { "break", "char", "const", "continue", "do", "double", "else", "float", "for", "if", "int", "return", "void", "while" };//¹Ø¼ü×Ö
 string PT[] = { "+", "-", "*", "/", "<", ">", "=", ",", ";", "[", "]", "{", "}", "(", ")", "!", "&&", "||", "<=", ">=", "==", "!=" };//½ç·û
 
@@ -55,12 +55,14 @@ void lexical::lexical_anylize()
 				cur_token.num = CT.size();
 				CT.push_back(str);
 				cur_token.tablename = "CT";
-				token_list.push_back(cur_token); 
+				cur_token.symbol_pointer = -1;
+				token_list.push_back(cur_token);
 				break;
 			case 6:
 				cur_token.num = CT.size();
 				CT.push_back(str);
 				cur_token.tablename = "CT";
+				cur_token.symbol_pointer = -1;
 				token_list.push_back(cur_token);
 				break;
 			case 7:
@@ -73,22 +75,40 @@ void lexical::lexical_anylize()
 					{
 						cur_token.num = IT.size();
 						IT.push_back(str);
+						symbol tmp;
+						cur_token.symbol_pointer = symbol_list.size();
+						tmp.name = cur_token;
+						tmp.type = -1;
+						//cout<< tmp.name.num;
+						symbol_list.push_back(tmp);
 					}
 					else
 					{
 						cur_token.num = it_pos;
+						int i = 0;
+						for(auto str : symbol_list)
+                        {
+                            if(str.name.num == cur_token.num)
+                            {
+                                cur_token.symbol_pointer = i;
+                            }
+                            i++;
+                        }
 					}
-					
+
 				}
 				else
 				{
 					cur_token.tablename = "KT";
 					cur_token.num = str_pos;
+					cur_token.symbol_pointer = -1;
 				}
 				token_list.push_back(cur_token);
 				break;
 			case 10:
 				cur_token.num = CHT.size();
+				cur_token.symbol_pointer = -1;
+				ch = str[1];
 				ch = str[1];
 				CHT.push_back(ch);
 				cur_token.tablename = "CHT";
@@ -106,15 +126,21 @@ void lexical::lexical_anylize()
 			case 20:
 			case 22:
 			case 24:
+			case 27:
+			case 28:
+			case 29:
+			case 30:
 				cur_token.num = check_pt_pos(str);
+				cur_token.symbol_pointer = -1;
 				cur_token.tablename = "PT";
 				token_list.push_back(cur_token);
 				break;
 			case 25:
 				cur_token.num = CT.size();
+				cur_token.symbol_pointer = -1;
 				cur_token.tablename = "CT";
 				token_list.push_back(cur_token);
-				CT.push_back(str); 
+				CT.push_back(str);
 				break;
 			}
 			//cout << str << endl;

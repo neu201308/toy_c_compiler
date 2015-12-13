@@ -1,6 +1,8 @@
 #pragma once
 class lexical
 {
+
+
 public:
 	lexical();
 	~lexical();
@@ -12,6 +14,9 @@ public:
 	vector<string> CT;//³£Á¿
 	vector<char> CHT;//×Ö·û
 	vector<token> token_list;
+
+	vector<symbol> symbol_list;
+
 private:
 	char c;
 	fstream file;
